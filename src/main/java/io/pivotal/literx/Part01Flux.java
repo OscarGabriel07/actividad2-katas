@@ -1,0 +1,55 @@
+package io.pivotal.literx;
+
+import reactor.core.publisher.Flux;
+
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Learn how to create Flux instances.
+ *
+ * @author Sebastien Deleuze
+ * @see <a href="https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html">Flux Javadoc</a>
+ */
+public class Part01Flux {
+
+//========================================================================================
+
+	// TODO Return an empty Flux
+	Flux<String> emptyFlux() {
+		return Flux.empty();
+	}
+
+//========================================================================================
+
+	// TODO Return a Flux that contains 2 values "foo" and "bar" without using an array or a collection
+	Flux<String> fooBarFluxFromValues() {
+		return Flux.just("foo", "bar");
+	}
+
+//========================================================================================
+
+	// TODO Create a Flux from a List that contains 2 values "foo" and "bar"
+	Flux<String> fooBarFluxFromList() {
+		List<String> values = Arrays.asList("foo", "bar");
+		return Flux.fromIterable(values);
+	}
+
+//========================================================================================
+
+	// TODO Create a Flux that emits an IllegalStateException
+	Flux<String> errorFlux() {
+		return Flux.error(new IllegalStateException("error message"));
+	}
+
+//========================================================================================
+
+		// TODO Create a Flux that emits increasing values from 0 to 9 each 100ms
+	Flux<Long> counter() {
+		List<Long> numbers = Arrays.asList(0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L);
+		return Flux.fromIterable(numbers)
+				.delayElements(Duration.ofMillis(100));
+	}
+
+}
