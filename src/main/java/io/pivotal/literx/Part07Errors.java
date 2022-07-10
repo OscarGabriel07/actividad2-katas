@@ -21,6 +21,8 @@ import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 /**
  * Learn how to deal with errors.
  *
@@ -33,14 +35,18 @@ public class Part07Errors {
 
 	// TODO Return a Mono<User> containing User.SAUL when an error occurs in the input Mono, else do not change the input Mono.
 	Mono<User> betterCallSaulForBogusMono(Mono<User> mono) {
-		return null;
+		return mono.onErrorReturn(User.SAUL);
+
 	}
 
 //========================================================================================
 
 	// TODO Return a Flux<User> containing User.SAUL and User.JESSE when an error occurs in the input Flux, else do not change the input Flux.
 	Flux<User> betterCallSaulAndJesseForBogusFlux(Flux<User> flux) {
-		return null;
+		Flux<User> fluxReturnOnError = Flux.just(User.SAUL, User.JESSE);
+		return flux
+				.onErrorResume(error -> fluxReturnOnError);
+
 	}
 
 //========================================================================================
@@ -48,7 +54,14 @@ public class Part07Errors {
 	// TODO Implement a method that capitalizes each user of the incoming flux using the
 	// #capitalizeUser method and emits an error containing a GetOutOfHereException error
 	Flux<User> capitalizeMany(Flux<User> flux) {
-		return null;
+		return flux
+				.flatMap(user -> {
+					try {
+						return Flux.just(capitalizeUser(user));
+					} catch (GetOutOfHereException e) {
+						return Flux.error(new GetOutOfHereException());
+					}
+				});
 	}
 
 	User capitalizeUser(User user) throws GetOutOfHereException {
